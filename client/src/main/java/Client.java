@@ -58,8 +58,10 @@ public class Client {
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator()).sync();
 
                 FileToSend fileToSend = new FileToSend();
-                fileToSend.setPath(Path.of("\\C\123"));
-                System.out.println("Try to send message from client: " + fileToSend);
+                fileToSend.setPath(Path.of("C:\\in\\in.txt"));
+                fileToSend.readFileToBytes();
+//                System.out.println("lenght = " + fileToSend.getBuffer());
+                System.out.println("Try to send message from client: " + fileToSend.getPath());
                 channelFuture.channel().writeAndFlush(fileToSend).sync();
                 try {
                     Thread.sleep(10000);

@@ -13,6 +13,7 @@ public class SecondServerHandler extends SimpleChannelInboundHandler {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 //        cause.printStackTrace();
         System.out.println("Something were wrong");
+        System.out.println(cause);
         ctx.close();
     }
 
