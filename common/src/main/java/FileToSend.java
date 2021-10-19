@@ -1,9 +1,6 @@
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 
 @JsonAutoDetect
@@ -11,10 +8,7 @@ public class FileToSend {
 
     public Path path;
     public byte[] buffer;
-
-//    public int getBuffer() {
-//        return buffer.length;
-//    }
+    String filename;
 
     public void setPath(Path path) {
         this.path = path;
@@ -22,6 +16,10 @@ public class FileToSend {
 
     public Path getPath() {
         return path;
+    }
+
+    public String getFilename() {
+        return this.path.getFileName().toString();
     }
 
     public void readFileToBytes() {
@@ -38,9 +36,9 @@ public class FileToSend {
         }
     }
 
-    public void writeFileByByres() {
+    public void writeFileByByres(String path) {
         try {
-            FileOutputStream fos = new FileOutputStream(String.valueOf("C:\\out\\out.txt"));
+            FileOutputStream fos = new FileOutputStream(String.valueOf(path));
             fos.write(this.buffer, 0, this.buffer.length);
             fos.close();
         } catch (FileNotFoundException e) {

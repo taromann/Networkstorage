@@ -51,8 +51,6 @@ public class Client {
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
 
-            while (true) {
-
 //                final String message = String.format("[%s] %s", LocalDateTime.now(), Thread.currentThread().getName());
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator());
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator()).sync();
@@ -60,7 +58,6 @@ public class Client {
                 FileToSend fileToSend = new FileToSend();
                 fileToSend.setPath(Path.of("C:\\in\\in.txt"));
                 fileToSend.readFileToBytes();
-//                System.out.println("lenght = " + fileToSend.getBuffer());
                 System.out.println("Try to send message from client: " + fileToSend.getPath());
                 channelFuture.channel().writeAndFlush(fileToSend).sync();
                 try {
@@ -68,7 +65,6 @@ public class Client {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

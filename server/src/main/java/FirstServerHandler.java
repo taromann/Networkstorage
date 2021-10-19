@@ -32,7 +32,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileToSend> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileToSend msg) throws Exception {
-        msg.writeFileByByres();
+        msg.writeFileByByres("C:\\out\\" + msg.getFilename());
         System.out.println(" 1st handler: " + msg.getPath());
     }
 }
