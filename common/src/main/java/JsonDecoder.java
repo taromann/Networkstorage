@@ -12,7 +12,7 @@ public class JsonDecoder extends MessageToMessageDecoder<String> {
     @Override
     protected void decode(ChannelHandlerContext ctx, String msg, List<Object> out) throws Exception {
         StringReader reader = new StringReader(msg);
-        FileToSend file = objectMapper.readValue(reader, FileToSend.class);
+        FileDTO file = objectMapper.readValue(reader, FileDTO.class);
         out.add(file);
     }
 

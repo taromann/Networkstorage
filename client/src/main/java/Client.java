@@ -55,11 +55,7 @@ public class Client {
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator());
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator()).sync();
 
-                FileToSend fileToSend = new FileToSend();
-                fileToSend.setPath(Path.of("C:\\in\\in.txt"));
-                fileToSend.readFileToBytes();
-                System.out.println("Try to send message from client: " + fileToSend.getPath());
-                channelFuture.channel().writeAndFlush(fileToSend).sync();
+            channelFuture.channel().writeAndFlush(getFileToSend("C:\\in\\in.txt")).sync();
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
@@ -71,5 +67,13 @@ public class Client {
             group.shutdownGracefully();
         }
 //        });
+    }
+
+    private FileDTO getFileToSend(String path) {
+        FileDTO fileToSend = new FileDTO();
+        fileToSend.setPath(Path.of(path));
+        fileToSend.setBuffer(FileByteReader.readFileToBytes(Path.of(path)));
+        System.out.println("Try to send message from client: " + fileToSend.getPath());
+        return fileToSend;
     }
 }

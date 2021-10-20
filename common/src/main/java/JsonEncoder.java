@@ -5,10 +5,10 @@ import io.netty.handler.codec.MessageToMessageEncoder;
 import java.io.StringWriter;
 import java.util.List;
 
-public class JsonEncoder extends MessageToMessageEncoder<FileToSend> {
+public class JsonEncoder extends MessageToMessageEncoder<FileDTO> {
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, FileToSend file, List<Object> out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, FileDTO file, List<Object> out) throws Exception {
         StringWriter writer = new StringWriter();
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(writer, file);

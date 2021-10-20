@@ -1,7 +1,9 @@
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class FirstServerHandler extends SimpleChannelInboundHandler<FileToSend> {
+import java.nio.file.Path;
+
+public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -31,9 +33,9 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileToSend> 
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, FileToSend msg) throws Exception {
-        msg.writeFileByByres("C:\\out\\" + msg.getFilename());
-        System.out.println(" 1st handler: " + msg.getPath());
+    protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) throws Exception {
+        FileByteWriter.writeFileByBytes(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
+        System.out.println(" 1st handler: " + fileDTO.getPath());
     }
 }
 
