@@ -6,7 +6,7 @@ import java.nio.file.Path;
 public class FileByteReader {
     private static byte[] buffer;
 
-    public static byte[] readFileToBytes(Path path) {
+    public static byte[] readBytesFromFile(Path path) {
         try {
             FileInputStream fin = new FileInputStream(String.valueOf(path));
             buffer = new byte[fin.available()];

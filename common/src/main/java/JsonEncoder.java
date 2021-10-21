@@ -13,7 +13,7 @@ public class JsonEncoder extends MessageToMessageEncoder<FileDTO> {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(writer, file);
 //        System.out.println(writer.toString());
-        out.add(writer.toString() +"\n");
+        out.add(writer.toString());
     }
 
 }

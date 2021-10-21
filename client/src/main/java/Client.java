@@ -5,6 +5,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
@@ -38,7 +40,9 @@ public class Client {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(
-                                    new LineBasedFrameDecoder(256),
+                                    new LengthFieldBasedFrameDecoder(1024,0, 3, 0, 3),
+                                    new LengthFieldPrepender(3),
+//                                    new LineBasedFrameDecoder(256),
                                     new StringEncoder(),
                                     new StringDecoder(),
                                     new JsonEncoder(),
@@ -55,7 +59,7 @@ public class Client {
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator());
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator()).sync();
 
-            channelFuture.channel().writeAndFlush(getFileToSend("C:\\in\\in.txt")).sync();
+            channelFuture.channel().writeAndFlush(getFileToSend(Path.of("C:/in/in.txt"))).sync();
                 try {
                     Thread.sleep(10000);
                 } catch (InterruptedException e) {
@@ -69,10 +73,10 @@ public class Client {
 //        });
     }
 
-    private FileDTO getFileToSend(String path) {
+    private FileDTO getFileToSend(Path path) {
         FileDTO fileToSend = new FileDTO();
-        fileToSend.setPath(Path.of(path));
-        fileToSend.setBuffer(FileByteReader.readFileToBytes(Path.of(path)));
+        fileToSend.setPath(path);
+        fileToSend.setBuffer(FileByteReader.readBytesFromFile(path));
         System.out.println("Try to send message from client: " + fileToSend.getPath());
         return fileToSend;
     }

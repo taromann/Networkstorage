@@ -23,7 +23,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 //        cause.printStackTrace();
-        System.out.println("Something were wrong");
+        System.out.println("Something were wrong: " + cause.getMessage());
         ctx.close();
     }
 
@@ -34,7 +34,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) throws Exception {
-        FileByteWriter.writeFileByBytes(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
+        FileByteWriter.writeBytesToFile(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
         System.out.println(" 1st handler: " + fileDTO.getPath());
     }
 }
