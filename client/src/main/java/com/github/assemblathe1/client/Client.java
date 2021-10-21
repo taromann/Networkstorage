@@ -1,3 +1,10 @@
+package com.github.assemblathe1.client;
+
+import com.github.assemblathe1.client.handler.FirstServerHandler;
+import com.github.assemblathe1.common.dto.FileDTO;
+import com.github.assemblathe1.common.pipeline.JsonDecoder;
+import com.github.assemblathe1.common.pipeline.JsonEncoder;
+import com.github.assemblathe1.common.utils.FileByteReader;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -7,10 +14,10 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
+import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -79,5 +86,10 @@ public class Client {
         fileToSend.setBuffer(FileByteReader.readBytesFromFile(path));
         System.out.println("Try to send message from client: " + fileToSend.getPath());
         return fileToSend;
+    }
+
+    private void sendFile(Path path) {
+//        new RandomAccessFile("C:/in/in.txt", "rw").
+
     }
 }

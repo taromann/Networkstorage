@@ -1,3 +1,5 @@
+package com.github.assemblathe1.common.utils;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;

@@ -1,3 +1,5 @@
+package com.github.assemblathe1.common.dto;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import java.io.*;

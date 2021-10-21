@@ -1,3 +1,5 @@
+package com.github.assemblathe1.common.utils;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

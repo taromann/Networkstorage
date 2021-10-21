@@ -1,4 +1,7 @@
+package com.github.assemblathe1.common.pipeline;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.assemblathe1.common.dto.FileDTO;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 

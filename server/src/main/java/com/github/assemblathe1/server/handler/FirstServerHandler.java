@@ -1,3 +1,7 @@
+package com.github.assemblathe1.server.handler;
+
+import com.github.assemblathe1.common.dto.FileDTO;
+import com.github.assemblathe1.common.utils.FileByteWriter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -14,9 +18,9 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
 //    protected void channelRead0(ChannelHandlerContext /*for dispatching received msg*/ ctx, String msg) throws Exception {
 //        System.out.println(msg);
 //        System.out.println(" 1st handler: " + msg);
-//        ctx.fireChannelRead(msg); //need to continue treatment by Second Server Handler
+//        ctx.fireChannelRead(msg); //need to continue treatment by Second com.github.assemblathe1.server.Server Handler
 //        ctx.pipeline().remove(this); //need to remove this First Serever Handler
-//        ctx.pipeline().addLast(new SecondServerHandler()); //add Second Server Handler
+//        ctx.pipeline().addLast(new com.github.assemblathe1.server.handler.SecondServerHandler()); //add Second com.github.assemblathe1.server.Server Handler
 //        ctx.channel().writeAndFlush("resended from server to clinet msg: " + msg + System.lineSeparator());
 //    }
 
