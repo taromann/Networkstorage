@@ -10,7 +10,16 @@ public class FileDTO {
 
     public Path path;
     public byte[] buffer;
-    String filename;
+    public String filename;
+    public int startOfset = 0;
+
+    public int getStartOfset() {
+        return startOfset;
+    }
+
+    public void setStartOfset(int startOfset) {
+        this.startOfset = startOfset;
+    }
 
     public void setPath(Path path) {
         this.path = path;

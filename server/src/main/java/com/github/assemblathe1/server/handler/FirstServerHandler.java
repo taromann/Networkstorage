@@ -1,11 +1,10 @@
 package com.github.assemblathe1.server.handler;
 
 import com.github.assemblathe1.common.dto.FileDTO;
-import com.github.assemblathe1.common.utils.FileByteWriter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-import java.nio.file.Path;
+import java.io.RandomAccessFile;
 
 public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
 
@@ -26,7 +25,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-//        cause.printStackTrace();
+        cause.printStackTrace();
         System.out.println("Something were wrong: " + cause.getMessage());
         ctx.close();
     }
@@ -38,7 +37,10 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) throws Exception {
-        FileByteWriter.writeBytesToFile(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
+//        FileByteWriter.writeBytesToFile(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
+        RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\in.txt", "rw");
+        randomAccessFile.write(fileDTO.getBuffer(), fileDTO.startOfset, 5);
+
         System.out.println(" 1st handler: " + fileDTO.getPath());
     }
 }

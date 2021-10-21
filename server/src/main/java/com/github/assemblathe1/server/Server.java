@@ -38,8 +38,8 @@ public class Server {
                         @Override
                         protected void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast(
-                                    new LengthFieldBasedFrameDecoder(1024*1024,0, 3, 0, 3),
-                                    new LengthFieldPrepender(3),
+                                    new LengthFieldBasedFrameDecoder(1024 * 1024 * 1024,0, 4, 0, 4),
+                                    new LengthFieldPrepender(4),
 //                                    new LineBasedFrameDecoder(256),
                                     new StringEncoder(),
                                     new StringDecoder(),
