@@ -2,23 +2,35 @@ package com.github.assemblathe1.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
-import java.io.*;
 import java.nio.file.Path;
 
 @JsonAutoDetect
 public class FileDTO {
 
-    public Path path;
-    public byte[] buffer;
-    public String filename;
-    public int startOfset = 0;
+    private Path path;
+    private byte[] buffer;
+    private String filename;
+    private long startOffset;
+    private int length;
 
-    public int getStartOfset() {
-        return startOfset;
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
-    public void setStartOfset(int startOfset) {
-        this.startOfset = startOfset;
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    public long getStartOffset() {
+        return startOffset;
+    }
+
+    public void setStartOffset(long startOffset) {
+        this.startOffset = startOffset;
     }
 
     public void setPath(Path path) {

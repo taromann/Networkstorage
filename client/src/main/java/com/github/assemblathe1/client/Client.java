@@ -4,7 +4,6 @@ import com.github.assemblathe1.client.handler.FirstServerHandler;
 import com.github.assemblathe1.common.dto.FileDTO;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
-import com.github.assemblathe1.common.utils.FileByteReader;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -17,7 +16,6 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
@@ -84,29 +82,28 @@ public class Client {
 
     private void getFileToSend(ChannelFuture channelFuture, Path path) {
 
-        int startOfset = 0;
+        long startOffset = 0;
 
+        try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
 
-        for (int i = 0; i < 5; i++) {
-            FileDTO fileToSend = new FileDTO();
-            fileToSend.setPath(path);
-            try {
+            while (startOffset < raf.length()) {
+                FileDTO fileToSend = new FileDTO();
+                fileToSend.setPath(path);
+
                 byte[] buffer = new byte[5];
-                RandomAccessFile randomAccessFile = new RandomAccessFile(String.valueOf(path), "r");
-                randomAccessFile.seek(startOfset);
-                randomAccessFile.read(buffer, 0, 5);
+                raf.seek(startOffset);
+                int bufferLength = raf.read(buffer);
                 fileToSend.setBuffer(buffer);
-                startOfset += 5;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //        fileToSend.setBuffer(FileByteReader.readBytesFromFile(path));
-            try {
+                fileToSend.setLength(bufferLength);
+                fileToSend.setStartOffset(startOffset);
+                startOffset += 5;
                 System.out.println("Try to send message from client: " + fileToSend.getPath());
-                channelFuture.channel().writeAndFlush(fileToSend).sync();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                channelFuture.channel().writeAndFlush(fileToSend).sync(); //Channel передавать в метод
             }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
+        //        fileToSend.setBuffer(FileByteReader.readBytesFromFile(path));
     }
 }
+

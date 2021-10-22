@@ -38,8 +38,8 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) throws Exception {
 //        FileByteWriter.writeBytesToFile(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
-        RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\in.txt", "rw");
-        randomAccessFile.write(fileDTO.getBuffer(), fileDTO.startOfset, 5);
+//        RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\in.txt", "rw");
+//        randomAccessFile.write(fileDTO.getBuffer(), fileDTO.startOfset, 5);
 
         System.out.println(" 1st handler: " + fileDTO.getPath());
     }
