@@ -7,6 +7,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import java.io.RandomAccessFile;
 
 public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
+    private static final Object MONITOR = new Object();
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -38,9 +39,10 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) throws Exception {
 //        FileByteWriter.writeBytesToFile(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
-//        RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\in.txt", "rw");
-//        randomAccessFile.write(fileDTO.getBuffer(), fileDTO.startOfset, 5);
-
+        RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\3.exe", "rw");
+        randomAccessFile.seek(fileDTO.getStartOffset());
+        randomAccessFile.write(fileDTO.getBuffer(), 0, fileDTO.getBufferLength());
+//        randomAccessFile.close();
         System.out.println(" 1st handler: " + fileDTO.getPath());
     }
 }

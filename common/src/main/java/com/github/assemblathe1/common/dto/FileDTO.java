@@ -10,26 +10,26 @@ public class FileDTO {
     private Path path;
     private byte[] buffer;
     private String filename;
-    private long startOffset;
-    private int length;
+    private int startOffset;
+    private int bufferLength;
 
     public void setFilename(String filename) {
         this.filename = filename;
     }
 
-    public int getLength() {
-        return length;
+    public int getBufferLength() {
+        return bufferLength;
     }
 
-    public void setLength(int length) {
-        this.length = length;
+    public void setBufferLength(int bufferLength) {
+        this.bufferLength = bufferLength;
     }
 
-    public long getStartOffset() {
+    public int getStartOffset() {
         return startOffset;
     }
 
-    public void setStartOffset(long startOffset) {
+    public void setStartOffset(int startOffset) {
         this.startOffset = startOffset;
     }
 

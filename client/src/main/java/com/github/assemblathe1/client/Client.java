@@ -23,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Client {
+    public static final int MAX_FRAME_LENGTH = 1024 * 1024 * 8; //in common
     private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(5);
 
     public static void main(String[] args) throws InterruptedException {
@@ -47,7 +48,7 @@ public class Client {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline().addLast(
-                                    new LengthFieldBasedFrameDecoder(1024 * 1024 * 1024, 0, 4, 0, 4),
+                                    new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH, 0, 4, 0, 4),
                                     new LengthFieldPrepender(4),
 //                                    new LineBasedFrameDecoder(256),
                                     new StringEncoder(),
@@ -66,7 +67,7 @@ public class Client {
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator());
 //                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator()).sync();
 
-            getFileToSend(channelFuture, Path.of("C:/in/in.txt"));
+            getFileToSend(channelFuture, Path.of("C:/in/3.exe"));
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
@@ -81,29 +82,24 @@ public class Client {
     }
 
     private void getFileToSend(ChannelFuture channelFuture, Path path) {
-
-        long startOffset = 0;
-
+        int startOffset = 0;
         try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
-
+            byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
             while (startOffset < raf.length()) {
                 FileDTO fileToSend = new FileDTO();
                 fileToSend.setPath(path);
-
-                byte[] buffer = new byte[5];
                 raf.seek(startOffset);
                 int bufferLength = raf.read(buffer);
                 fileToSend.setBuffer(buffer);
-                fileToSend.setLength(bufferLength);
+                fileToSend.setBufferLength(bufferLength);
                 fileToSend.setStartOffset(startOffset);
-                startOffset += 5;
+                startOffset += bufferLength;
                 System.out.println("Try to send message from client: " + fileToSend.getPath());
                 channelFuture.channel().writeAndFlush(fileToSend).sync(); //Channel передавать в метод
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-        //        fileToSend.setBuffer(FileByteReader.readBytesFromFile(path));
     }
 }
 

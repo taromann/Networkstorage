@@ -17,6 +17,7 @@ import io.netty.handler.codec.string.StringEncoder;
 
 public class Server {
     private final int port;
+    public static final int MAX_FRAME_LENGTH = 1024 * 1024 * 10; //in common
 
     public static void main(String[] args) throws InterruptedException {
         new Server(9000).start();
@@ -38,7 +39,7 @@ public class Server {
                         @Override
                         protected void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast(
-                                    new LengthFieldBasedFrameDecoder(1024 * 1024 * 1024,0, 4, 0, 4),
+                                    new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH,0, 4, 0, 4),
                                     new LengthFieldPrepender(4),
 //                                    new LineBasedFrameDecoder(256),
                                     new StringEncoder(),
