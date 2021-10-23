@@ -4,7 +4,10 @@ import com.github.assemblathe1.common.dto.FileDTO;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Path;
 
 public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     private static final Object MONITOR = new Object();
@@ -37,13 +40,25 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) {
 //        FileByteWriter.writeBytesToFile(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
-        RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\3.exe", "rw");
-        randomAccessFile.seek(fileDTO.getStartOffset());
-        randomAccessFile.write(fileDTO.getBuffer(), 0, fileDTO.getBufferLength());
-//        randomAccessFile.close();
-        System.out.println(" 1st handler: " + fileDTO.getPath());
+
+
+        try {
+            RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\3.exe", "rw");
+            randomAccessFile.seek(fileDTO.getStartOffset());
+            randomAccessFile.write(fileDTO.getBuffer(), 0, fileDTO.getBufferLength());
+            System.out.println(" 1st handler: " + fileDTO.getPath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void accessFile(Path path) {
+
     }
 }
 
