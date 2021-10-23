@@ -42,23 +42,19 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) {
 //        FileByteWriter.writeBytesToFile(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
-
-
         try {
-            RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\3.exe", "rw");
+            RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\" + fileDTO.getFilename(), "rw");
             randomAccessFile.seek(fileDTO.getStartOffset());
             randomAccessFile.write(fileDTO.getBuffer(), 0, fileDTO.getBufferLength());
             System.out.println(" 1st handler: " + fileDTO.getPath());
+            randomAccessFile.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-
+            channelRead0(ctx, fileDTO);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
         }
-    }
-
-    public void accessFile(Path path) {
-
     }
 }
 

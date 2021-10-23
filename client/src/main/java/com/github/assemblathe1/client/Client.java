@@ -94,7 +94,7 @@ public class Client {
                 fileToSend.setBufferLength(bufferLength);
                 fileToSend.setStartOffset(startOffset);
                 startOffset += bufferLength;
-                System.out.println("Try to send message from client: " + fileToSend.getPath());
+                System.out.println("Try to send message from client: " + fileToSend.getPath() + " " + fileToSend.getBufferLength());
                 channelFuture.channel().writeAndFlush(fileToSend).sync(); //Channel передавать в метод
             }
         } catch (IOException | InterruptedException e) {

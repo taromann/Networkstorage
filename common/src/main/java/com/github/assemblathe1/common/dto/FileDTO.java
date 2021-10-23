@@ -9,12 +9,12 @@ public class FileDTO {
 
     private Path path;
     private byte[] buffer;
-    private String filename;
+    private Path filename;
     private int startOffset;
     private int bufferLength;
 
     public void setFilename(String filename) {
-        this.filename = filename;
+        this.filename = this.path.getFileName();
     }
 
     public int getBufferLength() {
