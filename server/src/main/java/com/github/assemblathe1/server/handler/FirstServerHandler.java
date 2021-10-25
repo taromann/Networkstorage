@@ -53,7 +53,6 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
             channelRead0(ctx, fileDTO);
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
         }
     }
 }

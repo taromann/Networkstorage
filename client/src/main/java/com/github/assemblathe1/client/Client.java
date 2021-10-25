@@ -4,6 +4,7 @@ import com.github.assemblathe1.client.handler.FirstServerHandler;
 import com.github.assemblathe1.common.dto.FileDTO;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
+import com.github.assemblathe1.common.utils.FileWatcher;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -25,6 +26,8 @@ import java.util.concurrent.Executors;
 public class Client {
     public static final int MAX_FRAME_LENGTH = 1024 * 1024 * 8; //in common
     private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(5);
+    private static final Path SOURCE_DIRECTORY = Path.of("C:\\in");
+    private static final Path DESTINATION_DIRECTORY = Path.of("C:\\out");
 
     public static void main(String[] args) throws InterruptedException {
         try {
@@ -62,12 +65,9 @@ public class Client {
             System.out.println("Client started");
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
+            FileWatcher fileWatcher = new FileWatcher(SOURCE_DIRECTORY, DESTINATION_DIRECTORY);
+            fileWatcher.getFiles().stream().forEach(path -> /*System.out.println(path) */ sendFile(channelFuture, path));
 
-//                final String message = String.format("[%s] %s", LocalDateTime.now(), Thread.currentThread().getName());
-//                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator());
-//                channelFuture.channel().writeAndFlush(message + " :sended from client" + System.lineSeparator()).sync();
-
-            getFileToSend(channelFuture, Path.of("C:/in/3.exe"));
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
@@ -81,7 +81,7 @@ public class Client {
 //        });
     }
 
-    private void getFileToSend(ChannelFuture channelFuture, Path path) {
+    private void sendFile(ChannelFuture channelFuture, Path path) {
         int startOffset = 0;
         try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
             byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
@@ -101,5 +101,10 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+
+
+
+
 }
 
