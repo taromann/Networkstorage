@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 public class Client {
     public static final int MAX_FRAME_LENGTH = 1024 * 1024 * 8; //in common
     private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(5);
-    private static final Path SOURCE_DIRECTORY = Path.of("C:\\in");
+    private static final Path WATCHING_DIRECTORY = Path.of("C:\\in");
     private static final Path DESTINATION_DIRECTORY = Path.of("C:\\out");
 
     public static void main(String[] args) throws InterruptedException {
@@ -65,7 +65,7 @@ public class Client {
             System.out.println("Client started");
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
-            FileWatcher fileWatcher = new FileWatcher(SOURCE_DIRECTORY, DESTINATION_DIRECTORY);
+            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, DESTINATION_DIRECTORY);
             fileWatcher.getFiles().stream().forEach(path -> /*System.out.println(path) */ sendFile(channelFuture, path));
 
             try {
@@ -86,8 +86,8 @@ public class Client {
         try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
             byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
             while (startOffset < raf.length()) {
-                FileDTO fileToSend = new FileDTO();
-                fileToSend.setPath(path);
+                FileDTO fileToSend = new FileDTO(path);
+//                fileToSend.setPath(path);
                 raf.seek(startOffset);
                 int bufferLength = raf.read(buffer);
                 fileToSend.setBuffer(buffer);

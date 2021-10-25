@@ -10,11 +10,21 @@ public class FileDTO {
     private Path path;
     private byte[] buffer;
     private Path filename;
+    private Path relativePath;
     private int startOffset;
     private int bufferLength;
 
+    public FileDTO(Path path) {
+        this.path = path;
+
+    }
+
     public void setFilename(String filename) {
         this.filename = this.path.getFileName();
+    }
+
+    public Path getRelativePath() {
+        return relativePath;
     }
 
     public int getBufferLength() {
