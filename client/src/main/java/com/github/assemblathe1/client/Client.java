@@ -86,15 +86,16 @@ public class Client {
         try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
             byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
             while (startOffset < raf.length()) {
-                FileDTO fileToSend = new FileDTO(path);
-//                fileToSend.setPath(path);
+                FileDTO fileToSend = new FileDTO();
+                fileToSend.setAbsolutPath(path);
+                fileToSend.setWatchingDirectory(WATCHING_DIRECTORY);
                 raf.seek(startOffset);
                 int bufferLength = raf.read(buffer);
                 fileToSend.setBuffer(buffer);
                 fileToSend.setBufferLength(bufferLength);
                 fileToSend.setStartOffset(startOffset);
                 startOffset += bufferLength;
-                System.out.println("Try to send message from client: " + fileToSend.getPath() + " " + fileToSend.getBufferLength());
+                System.out.println("Try to send message from client: " + fileToSend.getAbsolutPath() + " " + fileToSend.getBufferLength());
                 channelFuture.channel().writeAndFlush(fileToSend).sync(); //Channel передавать в метод
             }
         } catch (IOException | InterruptedException e) {

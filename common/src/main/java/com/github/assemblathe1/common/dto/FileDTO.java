@@ -7,23 +7,33 @@ import java.nio.file.Path;
 @JsonAutoDetect
 public class FileDTO {
 
-    private Path path;
+    private Path absolutPath;
     private byte[] buffer;
+
+    private Path watchingDirectory;
     private Path filename;
-    private Path relativePath;
+    private String relativePath;
     private int startOffset;
     private int bufferLength;
 
-    public FileDTO(Path path) {
-        this.path = path;
+    public FileDTO() {
+    }
 
+    public Path getWatchingDirectory() {
+        return watchingDirectory;
+    }
+
+    public void setWatchingDirectory(Path watchingDirectory) {
+        this.watchingDirectory = watchingDirectory;
+        this.relativePath = watchingDirectory.getParent().relativize(this.absolutPath).toString();
+        System.out.println("this.relativePath = " + relativePath);
     }
 
     public void setFilename(String filename) {
-        this.filename = this.path.getFileName();
+        this.filename = this.absolutPath.getFileName();
     }
 
-    public Path getRelativePath() {
+    public String getRelativePath() {
         return relativePath;
     }
 
@@ -43,12 +53,12 @@ public class FileDTO {
         this.startOffset = startOffset;
     }
 
-    public void setPath(Path path) {
-        this.path = path;
+    public void setAbsolutPath(Path absolutPath) {
+        this.absolutPath = absolutPath;
     }
 
-    public Path getPath() {
-        return path;
+    public Path getAbsolutPath() {
+        return absolutPath;
     }
 
     public byte[] getBuffer() {
@@ -60,6 +70,6 @@ public class FileDTO {
     }
 
     public String getFilename() {
-        return this.path.getFileName().toString();
+        return this.absolutPath.getFileName().toString();
     }
 }

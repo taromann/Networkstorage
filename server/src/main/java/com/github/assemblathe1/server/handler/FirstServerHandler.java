@@ -11,6 +11,7 @@ import java.nio.file.Path;
 
 public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     private static final Object MONITOR = new Object();
+    private static final Path STORAGE = Path.of("C:\\out\\");     // it is better to transfer this field to Server.java
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -43,14 +44,19 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) {
 //        FileByteWriter.writeBytesToFile(Path.of("C:\\out\\" + fileDTO.getFilename()), fileDTO.getBuffer());
         try {
-            RandomAccessFile randomAccessFile = new RandomAccessFile("C:\\out\\" + fileDTO.getFilename(), "rw");
+            Path path = Path.of(String.valueOf(STORAGE.resolve(fileDTO.getRelativePath())));
+//            Path path = Path.of(STORAGE.toString() + fileDTO.getRelativePath());
+            System.out.println("path = " + path);
+            RandomAccessFile randomAccessFile = new RandomAccessFile(String.valueOf(path), "rw");
+
+//            RandomAccessFile randomAccessFile = new RandomAccessFile(String.valueOf(STORAGE.toString() + fileDTO.getRelativePath()), "rw");
             randomAccessFile.seek(fileDTO.getStartOffset());
             randomAccessFile.write(fileDTO.getBuffer(), 0, fileDTO.getBufferLength());
-            System.out.println(" 1st handler: " + fileDTO.getPath());
+            System.out.println(" 1st handler: " + fileDTO.getAbsolutPath());
             randomAccessFile.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            channelRead0(ctx, fileDTO);
+//            channelRead0(ctx, fileDTO);
         } catch (IOException e) {
             e.printStackTrace();
         }
