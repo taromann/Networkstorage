@@ -3,16 +3,10 @@ package com.github.assemblathe1.client.handler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class FirstServerHandler extends SimpleChannelInboundHandler<String> {
+public class FirstServerHandler extends SimpleChannelInboundHandler<byte[]> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("New active channel");
-    }
-
-    @Override
-    protected void channelRead0(ChannelHandlerContext /*for dispatching received msg*/ ctx, String msg) throws Exception {
-        System.out.println(msg);
-//        ctx.channel().writeAndFlush("receive msg: " + msg);
     }
 
     @Override
@@ -26,5 +20,10 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<String> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("Client disconnected");
         System.out.println(ctx);
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, byte[] bytes) throws Exception {
+
     }
 }

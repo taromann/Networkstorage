@@ -14,6 +14,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.bytes.ByteArrayDecoder;
+import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
@@ -54,8 +56,8 @@ public class Client {
                                     new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH, 0, 4, 0, 4),
                                     new LengthFieldPrepender(4),
 //                                    new LineBasedFrameDecoder(256),
-                                    new StringEncoder(),
-                                    new StringDecoder(),
+                                    new ByteArrayEncoder(),
+                                    new ByteArrayDecoder(),
                                     new JsonEncoder(),
                                     new JsonDecoder(),
                                     new FirstServerHandler());

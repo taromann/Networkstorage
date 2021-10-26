@@ -26,7 +26,6 @@ public class FileDTO {
     public void setWatchingDirectory(Path watchingDirectory) {
         this.watchingDirectory = watchingDirectory;
         this.relativePath = watchingDirectory.getParent().relativize(this.absolutPath).toString();
-        System.out.println("this.relativePath = " + relativePath);
     }
 
     public void setFilename(String filename) {
