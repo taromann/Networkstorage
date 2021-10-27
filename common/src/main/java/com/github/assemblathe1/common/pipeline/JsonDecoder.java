@@ -8,14 +8,13 @@ import io.netty.handler.codec.MessageToMessageDecoder;
 import java.io.StringReader;
 import java.util.List;
 
-public class JsonDecoder extends MessageToMessageDecoder<String> {
+public class JsonDecoder extends MessageToMessageDecoder<byte[]> {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, String msg, List<Object> out) throws Exception {
-        StringReader reader = new StringReader(msg);
-        FileDTO file = objectMapper.readValue(reader, FileDTO.class);
+    protected void decode(ChannelHandlerContext ctx, byte[] msg, List<Object> out) throws Exception {
+        FileDTO file = objectMapper.readValue(msg, FileDTO.class);
         out.add(file);
     }
 
