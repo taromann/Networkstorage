@@ -1,6 +1,5 @@
 package com.github.assemblathe1.server;
 
-import com.github.assemblathe1.common.CommandListener;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
 import com.github.assemblathe1.server.handler.FirstServerHandler;
@@ -15,8 +14,6 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 
 public class Server {
     private final int port;

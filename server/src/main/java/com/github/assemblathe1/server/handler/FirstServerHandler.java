@@ -1,6 +1,6 @@
 package com.github.assemblathe1.server.handler;
 
-import com.github.assemblathe1.common.CommandListener;
+import com.github.assemblathe1.common.handler.CommandListener;
 import com.github.assemblathe1.common.dto.FileDTO;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -10,9 +10,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
 
-public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> implements CommandListener {
+public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     private static final Object MONITOR = new Object();
-    private static final Path STORAGE = Path.of("C:\\out\\");     // it is better to transfer this field to Server.java
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -33,24 +32,9 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> imp
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) {
-        try {
-            Path path = Path.of(String.valueOf(STORAGE.resolve(fileDTO.getRelativePath())));
-            RandomAccessFile randomAccessFile = new RandomAccessFile(String.valueOf(path), "rw");
-            randomAccessFile.seek(fileDTO.getStartOffset());
-            randomAccessFile.write(fileDTO.getBuffer(), 0, fileDTO.getBufferLength());
-            System.out.println(" 1st handler: " + fileDTO.getAbsolutPath());
-            randomAccessFile.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-//            channelRead0(ctx, fileDTO);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileDTO.execute(new CommandListener());
     }
 
-    @Override
-    public void updateFiles() {
 
-    }
 }
 

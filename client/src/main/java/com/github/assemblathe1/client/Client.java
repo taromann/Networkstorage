@@ -1,6 +1,7 @@
 package com.github.assemblathe1.client;
 
 import com.github.assemblathe1.client.handler.FirstServerHandler;
+import com.github.assemblathe1.common.dto.CmdGet;
 import com.github.assemblathe1.common.dto.FileDTO;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
@@ -88,7 +89,7 @@ public class Client {
         try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
             byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
             while (startOffset < raf.length()) {
-                FileDTO fileToSend = new FileDTO();
+                CmdGet fileToSend = new CmdGet();
                 fileToSend.setAbsolutPath(path);
                 fileToSend.setWatchingDirectory(WATCHING_DIRECTORY);
                 raf.seek(startOffset);
