@@ -3,7 +3,7 @@ package com.github.assemblathe1.client.handler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class FirstServerHandler extends SimpleChannelInboundHandler<byte[]> {
+public class FirstClientHandler extends SimpleChannelInboundHandler<byte[]> {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("New active channel");

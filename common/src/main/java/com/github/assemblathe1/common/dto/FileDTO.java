@@ -1,21 +1,20 @@
 package com.github.assemblathe1.common.dto;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.github.assemblathe1.common.handler.CommandHandler;
-
-import java.nio.file.Path;
+import io.netty.channel.ChannelHandlerContext;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
 //        @JsonSubTypes.Type(value = CmdPut.class, name = "cmdPut"),
-        @JsonSubTypes.Type(value = CmdGet.class, name = "cmdGet")
+        @JsonSubTypes.Type(value = PutFileRequest.class, name = "cmdGet")
 })
 
 
-public interface FileDTO {
-    void execute(CommandHandler commandHandler);
+public abstract class FileDTO {
+
+    public abstract void execute(ChannelHandlerContext ctx, CommandHandler commandHandler);
 
 
 //    private Path absolutPath;

@@ -1,8 +1,7 @@
 package com.github.assemblathe1.client;
 
-import com.github.assemblathe1.client.handler.FirstServerHandler;
-import com.github.assemblathe1.common.dto.CmdGet;
-import com.github.assemblathe1.common.dto.FileDTO;
+import com.github.assemblathe1.client.handler.FirstClientHandler;
+import com.github.assemblathe1.common.dto.PutFileRequest;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
 import com.github.assemblathe1.common.utils.FileWatcher;
@@ -17,8 +16,6 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -61,7 +58,7 @@ public class Client {
                                     new ByteArrayDecoder(),
                                     new JsonEncoder(),
                                     new JsonDecoder(),
-                                    new FirstServerHandler());
+                                    new FirstClientHandler());
                         }
                     });
 
@@ -89,7 +86,7 @@ public class Client {
         try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
             byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
             while (startOffset < raf.length()) {
-                CmdGet fileToSend = new CmdGet();
+                PutFileRequest fileToSend = new PutFileRequest();
                 fileToSend.setAbsolutPath(path);
                 fileToSend.setWatchingDirectory(WATCHING_DIRECTORY);
                 raf.seek(startOffset);

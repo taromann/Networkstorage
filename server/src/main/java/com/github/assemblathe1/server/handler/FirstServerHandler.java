@@ -1,14 +1,9 @@
 package com.github.assemblathe1.server.handler;
 
-import com.github.assemblathe1.common.handler.CommandListener;
+import com.github.assemblathe1.server.common.ServerCommandListener;
 import com.github.assemblathe1.common.dto.FileDTO;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.nio.file.Path;
 
 public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     private static final Object MONITOR = new Object();
@@ -32,7 +27,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) {
-        fileDTO.execute(new CommandListener());
+        fileDTO.execute(ctx, new ServerCommandListener());
     }
 
 
