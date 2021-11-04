@@ -5,8 +5,17 @@ import com.github.assemblathe1.common.dto.FileDTO;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import java.nio.file.Path;
+
 public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
-    private static final Object MONITOR = new Object();
+
+    private final Path destinationDirectory;
+
+    public FirstServerHandler(Path destinationDirectory) {
+        this.destinationDirectory = destinationDirectory;
+    }
+
+      // it is better to transfer this field to Server.java
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -27,7 +36,7 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) {
-        fileDTO.execute(ctx, new ServerCommandListener());
+        fileDTO.execute(ctx, destinationDirectory, new ServerCommandListener());
     }
 
 

@@ -10,23 +10,17 @@ import java.nio.file.Path;
 
 public class FileService {
 
-    private static final Path STORAGE = Path.of("C:\\out\\");     // it is better to transfer this field to Server.java
-
     public void sendFile() {
-
     }
 
-    public void receiveFile(PutFileRequest putFileRequest, ChannelHandlerContext ctx) {
+    public void receiveFileAndWrite(PutFileRequest putFileRequest, Path destinationDirectory, ChannelHandlerContext ctx) {
         try {
-            Path path = Path.of(String.valueOf(STORAGE.resolve(putFileRequest.getRelativePath())));
+            Path path = Path.of(String.valueOf(destinationDirectory.resolve(putFileRequest.getRelativePath())));
             RandomAccessFile randomAccessFile = new RandomAccessFile(String.valueOf(path), "rw");
             randomAccessFile.seek(putFileRequest.getStartOffset());
             randomAccessFile.write(putFileRequest.getBuffer(), 0, putFileRequest.getBufferLength());
             System.out.println(" 1st handler: " + putFileRequest.getAbsolutPath());
             randomAccessFile.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-//            channelRead0(ctx, fileDTO);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -9,22 +9,22 @@ import java.nio.file.Path;
 @Data
 public class PutFileRequest extends FileDTO {
 
-    private Path absolutPath;
     private byte[] buffer;
-
-    private Path watchingDirectory;
-    private Path filename;
-    private String relativePath;
     private int startOffset;
     private int bufferLength;
+
+    private Path watchingDirectory;
+    private Path absolutPath;
+    private String relativePath;
+
 
 
 
     @Override
-    public void execute(ChannelHandlerContext ctx, CommandHandler commandHandler) {
+    public void execute(ChannelHandlerContext ctx, Path destinationDirectory, CommandHandler commandHandler) {
         relativePath = watchingDirectory.getParent().relativize(this.absolutPath).toString();
-        filename = this.absolutPath.getFileName();
 
-        commandHandler.onPutFileRequest(this, ctx);
+
+        commandHandler.onPutFileRequest(this, destinationDirectory, ctx);
     }
 }

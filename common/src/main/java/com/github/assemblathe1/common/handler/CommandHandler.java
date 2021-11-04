@@ -7,7 +7,5 @@ import java.nio.file.Path;
 
 public interface CommandHandler {
 
-    void onPutFileRequest(PutFileRequest putFileRequest, ChannelHandlerContext ctx);
-//    Path absolutPath, byte[] buffer, Path watchingDirectory, Path filename, String relativePath, int startOffset, int bufferLength
-
+    void onPutFileRequest(PutFileRequest putFileRequest, Path destinationDirectory, ChannelHandlerContext ctx);
 }

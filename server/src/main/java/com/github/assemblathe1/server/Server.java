@@ -15,9 +15,12 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.bytes.ByteArrayEncoder;
 
+import java.nio.file.Path;
+
 public class Server {
     private final int port;
     public static final int MAX_FRAME_LENGTH = 1024 * 1024 * 10; //in common
+    private static final Path destinationDirectory = Path.of("C:\\out\\");
 
     public static void main(String[] args) throws InterruptedException {
         new Server(9000).start();
@@ -46,7 +49,7 @@ public class Server {
                                     new ByteArrayDecoder(),
                                     new JsonDecoder(),
                                     new JsonEncoder(),
-                                    new FirstServerHandler());
+                                    new FirstServerHandler(destinationDirectory));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)
