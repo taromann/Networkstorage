@@ -17,6 +17,6 @@ public class ClientCommandListener implements ClientCommandHandler {
     }
 
     @Override
-    public void onPutDirectoryRequest(PutDirectoryRequest putDirectoryRequest, Set<Path> paths, Path destinationDirectory,  ChannelHandlerContext ctx) {
+    public void onPutDirectoryRequest(PutDirectoryRequest putDirectoryRequest, Path dyrectory, Path destinationDirectory,  ChannelHandlerContext ctx) {
     }
 }

@@ -5,7 +5,7 @@ import com.github.assemblathe1.common.dto.PutDirectoryRequest;
 import com.github.assemblathe1.common.dto.PutFileRequest;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
-import com.github.assemblathe1.common.utils.FileWatcher;
+import com.github.assemblathe1.client.utils.FileWatcher;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -65,8 +65,9 @@ public class Client {
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
             FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY);
-            sendDirectories(channelFuture, fileWatcher.getSourseDirectories());
-            fileWatcher.getSourceFiles().forEach(path -> /*System.out.println(path) */ sendFile(channelFuture, path));
+
+            fileWatcher.getSourseDirectories().forEach(directory -> sendDirectory(channelFuture, directory));
+            fileWatcher.getSourceFiles().forEach(file -> sendFile(channelFuture, file));
 
             try {
                 Thread.sleep(10000);
@@ -80,12 +81,12 @@ public class Client {
         }
     }
 
-    private void sendDirectories(ChannelFuture channelFuture, Set<Path> paths) {
+    private void sendDirectory(ChannelFuture channelFuture, Path path) {
         PutDirectoryRequest putDirectoryRequest = new PutDirectoryRequest();
         putDirectoryRequest.setWatchingDirectory(WATCHING_DIRECTORY);
-        putDirectoryRequest.setDirectoriesStructore(paths);
+        putDirectoryRequest.setDirectory(path);
         System.out.println("Try to send directories from client: ");
-        paths.forEach(System.out::println);
+        System.out.println(path);
         try {
             channelFuture.channel().writeAndFlush(putDirectoryRequest).sync(); //Channel передавать в метод
         } catch (InterruptedException e) {

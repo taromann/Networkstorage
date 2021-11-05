@@ -1,4 +1,4 @@
-package com.github.assemblathe1.common.utils;
+package com.github.assemblathe1.client.utils;
 
 import lombok.Data;
 

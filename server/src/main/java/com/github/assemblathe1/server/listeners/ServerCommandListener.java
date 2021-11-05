@@ -19,7 +19,7 @@ public class ServerCommandListener implements ServerCommandHandler {
     }
 
     @Override
-    public void onPutDirectoryRequest(PutDirectoryRequest putDirectoryRequest, Set<Path> paths, Path destinationDirectory,  ChannelHandlerContext ctx) {
-        fileService.onPutDirectoryRequest(putDirectoryRequest, paths, destinationDirectory, ctx);
+    public void onPutDirectoryRequest(PutDirectoryRequest putDirectoryRequest, Path directory, Path destinationDirectory,  ChannelHandlerContext ctx) {
+        fileService.onPutDirectoryRequest(putDirectoryRequest, directory, destinationDirectory, ctx);
     }
 }

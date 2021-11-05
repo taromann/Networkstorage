@@ -9,5 +9,5 @@ import java.util.Set;
 
 public interface CommandHandler {
     void onPutFileRequest(PutFileRequest putFileRequest, Path destinationDirectory, ChannelHandlerContext ctx);
-    void onPutDirectoryRequest(PutDirectoryRequest putDirectoryRequest, Set<Path> paths, Path destinationDirectory, ChannelHandlerContext ctx);
+    void onPutDirectoryRequest(PutDirectoryRequest putDirectoryRequest, Path path, Path destinationDirectory, ChannelHandlerContext ctx);
 }

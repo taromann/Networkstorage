@@ -26,14 +26,22 @@ public class FileService {
         }
     }
 
-    public void onPutDirectoryRequest(PutDirectoryRequest putDirectoryRequest, Set<Path> paths, Path destinationDirectory, ChannelHandlerContext ctx) {
-        paths.stream().map(path -> putDirectoryRequest.getWatchingDirectory().getParent().relativize(path)).map(destinationDirectory::resolve).forEach(path -> {
-            try {
-                Files.createDirectories(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    public void onPutDirectoryRequest(PutDirectoryRequest putDirectoryRequest, Path paths, Path destinationDirectory, ChannelHandlerContext ctx) {
+
+        try {
+            Files.createDirectories(destinationDirectory.resolve(putDirectoryRequest.getWatchingDirectory().getParent().relativize(paths)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+//        paths.stream().map(path -> putDirectoryRequest.getWatchingDirectory().getParent().relativize(path)).map(destinationDirectory::resolve).forEach(path -> {
+//            try {
+//                Files.createDirectories(path);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        });
 //        paths.stream().map(path -> putDirectoryRequest.getWatchingDirectory().getParent().relativize(path)).map(destinationDirectory::resolve).forEach(System.out::println);
     }
 }
