@@ -1,8 +1,8 @@
 package com.github.assemblathe1.client;
 
 import com.github.assemblathe1.client.handlers.FirstClientHandler;
-import com.github.assemblathe1.common.dto.PutDirectoryRequest;
-import com.github.assemblathe1.common.dto.PutFileRequest;
+import com.github.assemblathe1.common.dto.AddDirectoryRequest;
+import com.github.assemblathe1.common.dto.AddFileRequest;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
 import com.github.assemblathe1.client.utils.FileWatcher;
@@ -21,7 +21,6 @@ import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -82,7 +81,7 @@ public class Client {
     }
 
     private void sendDirectory(ChannelFuture channelFuture, Path path) {
-        PutDirectoryRequest putDirectoryRequest = new PutDirectoryRequest();
+        AddDirectoryRequest putDirectoryRequest = new AddDirectoryRequest();
         putDirectoryRequest.setWatchingDirectory(WATCHING_DIRECTORY);
         putDirectoryRequest.setDirectory(path);
         System.out.println("Try to send directories from client: ");
@@ -99,7 +98,7 @@ public class Client {
         try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
             byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
             while (startOffset < raf.length()) {
-                PutFileRequest fileToSend = new PutFileRequest();
+                AddFileRequest fileToSend = new AddFileRequest();
                 fileToSend.setAbsolutPath(path);
                 fileToSend.setWatchingDirectory(WATCHING_DIRECTORY);
                 raf.seek(startOffset);

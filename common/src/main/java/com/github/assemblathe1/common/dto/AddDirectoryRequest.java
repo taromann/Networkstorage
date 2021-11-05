@@ -7,20 +7,12 @@ import lombok.Data;
 import java.nio.file.Path;
 
 @Data
-public class PutFileRequest extends FileDTO {
-
-    private byte[] buffer;
-    private int startOffset;
-    private int bufferLength;
-
+public class AddDirectoryRequest extends FileDTO {
+    private Path directory;
     private Path watchingDirectory;
-    private Path absolutPath;
-    private String relativePath;
-
 
     @Override
     public void execute(ChannelHandlerContext ctx, Path destinationDirectory, CommandHandler commandHandler) {
-        relativePath = watchingDirectory.getParent().relativize(this.absolutPath).toString();
-        commandHandler.onPutFileRequest(this, destinationDirectory, ctx);
+        commandHandler.onAddDirectoryRequest(this, directory, destinationDirectory, ctx);
     }
 }
