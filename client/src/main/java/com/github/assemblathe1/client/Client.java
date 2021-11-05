@@ -1,11 +1,12 @@
 package com.github.assemblathe1.client;
 
 import com.github.assemblathe1.client.handlers.FirstClientHandler;
+import com.github.assemblathe1.client.services.filewatcher.FileWatcher;
+import com.github.assemblathe1.client.services.filewatcher.listeners.FileAdapter;
 import com.github.assemblathe1.common.dto.AddDirectoryRequest;
 import com.github.assemblathe1.common.dto.AddFileRequest;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
-import com.github.assemblathe1.client.utils.FileWatcher;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -63,7 +64,8 @@ public class Client {
             System.out.println("Client started");
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
-            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY);
+//            OldFileWatcher oldFileWatcher = new OldFileWatcher(WATCHING_DIRECTORY);
+            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, new FileAdapter());
 
             fileWatcher.getSourseDirectories().forEach(directory -> sendDirectory(channelFuture, directory));
             fileWatcher.getSourceFiles().forEach(file -> sendFile(channelFuture, file));
