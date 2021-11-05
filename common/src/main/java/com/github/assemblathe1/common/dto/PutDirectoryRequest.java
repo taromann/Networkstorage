@@ -5,22 +5,16 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.Data;
 
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-public class PutFileRequest extends FileDTO {
-
-    private byte[] buffer;
-    private int startOffset;
-    private int bufferLength;
-
+public class PutDirectoryRequest extends FileDTO {
+    private Set<Path> directoriesStructore = new HashSet<>();
     private Path watchingDirectory;
-    private Path absolutPath;
-    private String relativePath;
-
 
     @Override
     public void execute(ChannelHandlerContext ctx, Path destinationDirectory, CommandHandler commandHandler) {
-        relativePath = watchingDirectory.getParent().relativize(this.absolutPath).toString();
-        commandHandler.onPutFileRequest(this, destinationDirectory, ctx);
+        commandHandler.onPutDirectoryRequest(this, directoriesStructore, destinationDirectory, ctx);
     }
 }

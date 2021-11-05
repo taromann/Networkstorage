@@ -1,6 +1,6 @@
-package com.github.assemblathe1.server.handler;
+package com.github.assemblathe1.server.handlers;
 
-import com.github.assemblathe1.server.common.ServerCommandListener;
+import com.github.assemblathe1.server.listeners.ServerCommandListener;
 import com.github.assemblathe1.common.dto.FileDTO;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -14,8 +14,6 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     public FirstServerHandler(Path destinationDirectory) {
         this.destinationDirectory = destinationDirectory;
     }
-
-      // it is better to transfer this field to Server.java
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

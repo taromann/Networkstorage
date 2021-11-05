@@ -1,6 +1,7 @@
 package com.github.assemblathe1.client;
 
-import com.github.assemblathe1.client.handler.FirstClientHandler;
+import com.github.assemblathe1.client.handlers.FirstClientHandler;
+import com.github.assemblathe1.common.dto.PutDirectoryRequest;
 import com.github.assemblathe1.common.dto.PutFileRequest;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
@@ -20,6 +21,7 @@ import io.netty.handler.codec.bytes.ByteArrayEncoder;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.file.Path;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,7 +29,6 @@ public class Client {
     public static final int MAX_FRAME_LENGTH = 1024 * 1024 * 8; //in common
     private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(5);
     private static final Path WATCHING_DIRECTORY = Path.of("C:\\in");
-    private static final Path DESTINATION_DIRECTORY = Path.of("C:\\out");
 
     public static void main(String[] args) throws InterruptedException {
         try {
@@ -40,7 +41,6 @@ public class Client {
 
     private void start() throws InterruptedException {
 
-//        THREAD_POOL.execute(() -> {
         final NioEventLoopGroup group = new NioEventLoopGroup();
         try {
             Bootstrap bootstrap = new Bootstrap()
@@ -53,7 +53,6 @@ public class Client {
                             ch.pipeline().addLast(
                                     new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH, 0, 4, 0, 4),
                                     new LengthFieldPrepender(4),
-//                                    new LineBasedFrameDecoder(256),
                                     new ByteArrayEncoder(),
                                     new ByteArrayDecoder(),
                                     new JsonEncoder(),
@@ -65,8 +64,9 @@ public class Client {
             System.out.println("Client started");
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
-            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, DESTINATION_DIRECTORY);
-            fileWatcher.getFiles().stream().forEach(path -> /*System.out.println(path) */ sendFile(channelFuture, path));
+            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY);
+            sendDirectories(channelFuture, fileWatcher.getSourseDirectories());
+            fileWatcher.getSourceFiles().forEach(path -> /*System.out.println(path) */ sendFile(channelFuture, path));
 
             try {
                 Thread.sleep(10000);
@@ -78,7 +78,19 @@ public class Client {
         } finally {
             group.shutdownGracefully();
         }
-//        });
+    }
+
+    private void sendDirectories(ChannelFuture channelFuture, Set<Path> paths) {
+        PutDirectoryRequest putDirectoryRequest = new PutDirectoryRequest();
+        putDirectoryRequest.setWatchingDirectory(WATCHING_DIRECTORY);
+        putDirectoryRequest.setDirectoriesStructore(paths);
+        System.out.println("Try to send directories from client: ");
+        paths.forEach(System.out::println);
+        try {
+            channelFuture.channel().writeAndFlush(putDirectoryRequest).sync(); //Channel передавать в метод
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendFile(ChannelFuture channelFuture, Path path) {
@@ -95,7 +107,7 @@ public class Client {
                 fileToSend.setBufferLength(bufferLength);
                 fileToSend.setStartOffset(startOffset);
                 startOffset += bufferLength;
-                System.out.println("Try to send message from client: " + fileToSend.getAbsolutPath() + " " + fileToSend.getBufferLength());
+                System.out.println("Try to send file from client: " + fileToSend.getAbsolutPath() + " " + fileToSend.getBufferLength());
                 channelFuture.channel().writeAndFlush(fileToSend).sync(); //Channel передавать в метод
             }
         } catch (IOException | InterruptedException e) {

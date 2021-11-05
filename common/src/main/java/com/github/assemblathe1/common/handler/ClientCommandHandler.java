@@ -1,4 +1,4 @@
 package com.github.assemblathe1.common.handler;
 
-public interface ClientCommandHandler {
+public interface ClientCommandHandler extends CommandHandler {
 }

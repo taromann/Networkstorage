@@ -1,4 +1,4 @@
-package com.github.assemblathe1.client.handler;
+package com.github.assemblathe1.client.handlers;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
