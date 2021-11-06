@@ -36,7 +36,6 @@ public class Client {
         } finally {
             THREAD_POOL.shutdown();
         }
-
     }
 
     private void start() {
@@ -64,16 +63,15 @@ public class Client {
             System.out.println("Client started");
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
-            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, new FileAdapter());
+            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, channelFuture, new FileAdapter(this));
 
             fileWatcher.getSourseDirectories().forEach(directory -> sendDirectory(channelFuture, directory));
+            System.out.println("On created channel future is active " + channelFuture.channel().isActive());
             fileWatcher.getSourceFiles().forEach(file -> sendFile(channelFuture, file));
 
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            channelFuture.channel().closeFuture().sync();
+
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
@@ -81,7 +79,7 @@ public class Client {
         }
     }
 
-    private void sendDirectory(ChannelFuture channelFuture, Path path) {
+    public void sendDirectory(ChannelFuture channelFuture, Path path) {
         AddDirectoryRequest putDirectoryRequest = new AddDirectoryRequest();
         putDirectoryRequest.setWatchingDirectory(WATCHING_DIRECTORY);
         putDirectoryRequest.setDirectory(path);
@@ -94,7 +92,7 @@ public class Client {
         }
     }
 
-    private void sendFile(ChannelFuture channelFuture, Path path) {
+    public void sendFile(ChannelFuture channelFuture, Path path) {
         int startOffset = 0;
         try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
             byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
@@ -115,10 +113,5 @@ public class Client {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 }
 

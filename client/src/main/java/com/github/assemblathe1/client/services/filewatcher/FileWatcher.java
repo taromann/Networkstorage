@@ -2,6 +2,7 @@ package com.github.assemblathe1.client.services.filewatcher;
 
 import com.github.assemblathe1.client.services.filewatcher.listeners.FileListener;
 import com.github.assemblathe1.client.services.filewatcher.utils.FileEvent;
+import io.netty.channel.ChannelFuture;
 import lombok.Data;
 
 import java.io.IOException;
@@ -18,8 +19,10 @@ public class FileWatcher extends SimpleFileVisitor<Path> {
     public Map<Path, WatchService> runningWatchServices = new HashMap<>();
     private Set<Path> sourseDirectories = new HashSet<>();
     private Set<Path> sourceFiles = new HashSet<>();
+    ChannelFuture channelFuture;
 
-    public FileWatcher(Path folder, FileListener listener) {
+    public FileWatcher(Path folder, ChannelFuture channelFuture, FileListener listener) {
+        this.channelFuture = channelFuture;
         createFoldersTree(folder);
         listeners.add(listener);
     }
@@ -79,7 +82,7 @@ public class FileWatcher extends SimpleFileVisitor<Path> {
         FileEvent event = new FileEvent(path);
         if (kind == ENTRY_CREATE) {
             for (FileListener listener : listeners) {
-                listener.onCreated(kind, event);
+                listener.onCreated(channelFuture, kind, event);
             }
             if (path.toFile().isDirectory()) {
                 addDirectoryToFileWatcher(path);

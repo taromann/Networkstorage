@@ -35,7 +35,6 @@ public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FileDTO fileDTO) {
         fileDTO.execute(ctx, destinationDirectory, new ServerCommandListener());
-        System.out.println("received FileDTO: " + fileDTO);
     }
 
 
