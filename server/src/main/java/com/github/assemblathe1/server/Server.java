@@ -44,7 +44,6 @@ public class Server {
                             ch.pipeline().addLast(
                                     new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH,0, 4, 0, 4),
                                     new LengthFieldPrepender(4),
-//                                    new LineBasedFrameDecoder(256),
                                     new ByteArrayEncoder(),
                                     new ByteArrayDecoder(),
                                     new JsonDecoder(),

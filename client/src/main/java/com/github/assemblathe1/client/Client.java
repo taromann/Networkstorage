@@ -30,7 +30,7 @@ public class Client {
     private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(5);
     private static final Path WATCHING_DIRECTORY = Path.of("C:\\in");
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         try {
             new Client().start();
         } finally {
@@ -39,7 +39,7 @@ public class Client {
 
     }
 
-    private void start() throws InterruptedException {
+    private void start() {
 
         final NioEventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -64,14 +64,13 @@ public class Client {
             System.out.println("Client started");
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
-//            OldFileWatcher oldFileWatcher = new OldFileWatcher(WATCHING_DIRECTORY);
             FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, new FileAdapter());
 
             fileWatcher.getSourseDirectories().forEach(directory -> sendDirectory(channelFuture, directory));
             fileWatcher.getSourceFiles().forEach(file -> sendFile(channelFuture, file));
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -86,8 +85,8 @@ public class Client {
         AddDirectoryRequest putDirectoryRequest = new AddDirectoryRequest();
         putDirectoryRequest.setWatchingDirectory(WATCHING_DIRECTORY);
         putDirectoryRequest.setDirectory(path);
-        System.out.println("Try to send directories from client: ");
-        System.out.println(path);
+        System.out.println("Try to send directories from client: " + path);
+
         try {
             channelFuture.channel().writeAndFlush(putDirectoryRequest).sync(); //Channel передавать в метод
         } catch (InterruptedException e) {
@@ -112,7 +111,7 @@ public class Client {
                 System.out.println("Try to send file from client: " + fileToSend.getAbsolutPath() + " " + fileToSend.getBufferLength());
                 channelFuture.channel().writeAndFlush(fileToSend).sync(); //Channel передавать в метод
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }
