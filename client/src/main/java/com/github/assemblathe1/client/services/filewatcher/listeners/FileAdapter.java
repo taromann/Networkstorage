@@ -17,7 +17,6 @@ public class FileAdapter implements FileListener {
     @Override
     public void onCreated(ChannelFuture channelFuture, WatchEvent.Kind<?> kind, FileEvent event) {
         System.out.println(kind + " " + event.getFile() + "  " + event);
-        System.out.println("On created channel future is active " + channelFuture.channel().isActive());
 
         try {
             Thread.sleep(1000);
@@ -25,15 +24,22 @@ public class FileAdapter implements FileListener {
             e.printStackTrace();
         }
 
-        client.sendFile(channelFuture, event.getFile());
+        if (event.getFile().toFile().isFile()) {
+            client.sendFile(channelFuture, event.getFile());
+        } else if (event.getFile().toFile().isDirectory()) {
+            client.sendDirectory(channelFuture, event.getFile());
+        }
+
+
     }
     @Override
-    public void onModified(WatchEvent.Kind<?> kind, FileEvent event) {
+    public void onModified(ChannelFuture channelFuture, WatchEvent.Kind<?> kind, FileEvent event) {
 //        System.out.println(kind + " " + event.getFile());
     }
 
     @Override
-    public void onDeleted(WatchEvent.Kind<?> kind, FileEvent event) {
+    public void onDeleted(ChannelFuture channelFuture, WatchEvent.Kind<?> kind, FileEvent event) {
         System.out.println(kind + " " + event.getFile());
+        client.deleteFile(channelFuture, event.getFile());
     }
 }

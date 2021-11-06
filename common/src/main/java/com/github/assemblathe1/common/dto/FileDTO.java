@@ -10,7 +10,8 @@ import java.nio.file.Path;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = AddDirectoryRequest.class, name = "putDirectoryRequest"),
-        @JsonSubTypes.Type(value = AddFileRequest.class, name = "putFileRequest")
+        @JsonSubTypes.Type(value = AddFileRequest.class, name = "putFileRequest"),
+        @JsonSubTypes.Type(value = DeleteRequest.class, name = "deleteFileRequest")
 })
 
 

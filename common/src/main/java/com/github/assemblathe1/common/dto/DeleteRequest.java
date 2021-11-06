@@ -7,11 +7,7 @@ import lombok.Data;
 import java.nio.file.Path;
 
 @Data
-public class AddFileRequest extends FileDTO {
-
-    private byte[] buffer;
-    private int startOffset;
-    private int bufferLength;
+public class DeleteRequest extends FileDTO {
 
     private Path watchingDirectory;
     private Path absolutPath;
@@ -21,6 +17,7 @@ public class AddFileRequest extends FileDTO {
     @Override
     public void execute(ChannelHandlerContext ctx, Path destinationDirectory, CommandHandler commandHandler) {
         relativePath = watchingDirectory.getParent().relativize(this.absolutPath);
-        commandHandler.onAddFileRequest(this, destinationDirectory, ctx);
+        commandHandler.onDeletedFileRequest(this, destinationDirectory, ctx);
     }
+
 }

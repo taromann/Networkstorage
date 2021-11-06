@@ -89,11 +89,11 @@ public class FileWatcher extends SimpleFileVisitor<Path> {
             }
         } else if (kind == ENTRY_MODIFY) {
             for (FileListener listener : listeners) {
-                listener.onModified(kind, event);
+                listener.onModified(channelFuture, kind, event);
             }
         } else if (kind == ENTRY_DELETE) {
             for (FileListener listener : listeners) {
-                listener.onDeleted(kind, event);
+                listener.onDeleted(channelFuture, kind, event);
             }
             try {
                 if (path.toFile().isDirectory()) {

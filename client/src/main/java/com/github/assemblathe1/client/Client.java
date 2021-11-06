@@ -5,6 +5,7 @@ import com.github.assemblathe1.client.services.filewatcher.FileWatcher;
 import com.github.assemblathe1.client.services.filewatcher.listeners.FileAdapter;
 import com.github.assemblathe1.common.dto.AddDirectoryRequest;
 import com.github.assemblathe1.common.dto.AddFileRequest;
+import com.github.assemblathe1.common.dto.DeleteRequest;
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
 import io.netty.bootstrap.Bootstrap;
@@ -66,7 +67,6 @@ public class Client {
             FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, channelFuture, new FileAdapter(this));
 
             fileWatcher.getSourseDirectories().forEach(directory -> sendDirectory(channelFuture, directory));
-            System.out.println("On created channel future is active " + channelFuture.channel().isActive());
             fileWatcher.getSourceFiles().forEach(file -> sendFile(channelFuture, file));
 
             channelFuture.channel().closeFuture().sync();
@@ -84,7 +84,6 @@ public class Client {
         putDirectoryRequest.setWatchingDirectory(WATCHING_DIRECTORY);
         putDirectoryRequest.setDirectory(path);
         System.out.println("Try to send directories from client: " + path);
-
         try {
             channelFuture.channel().writeAndFlush(putDirectoryRequest).sync(); //Channel передавать в метод
         } catch (InterruptedException e) {
@@ -113,5 +112,17 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    public void deleteFile(ChannelFuture channelFuture, Path path) {
+        DeleteRequest deleteRequest = new DeleteRequest();
+        deleteRequest.setAbsolutPath(path);
+        deleteRequest.setWatchingDirectory(WATCHING_DIRECTORY);
+        try {
+            channelFuture.channel().writeAndFlush(deleteRequest).sync(); //Channel передавать в метод
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

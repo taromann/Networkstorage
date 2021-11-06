@@ -8,6 +8,6 @@ import java.util.EventListener;
 
 public interface FileListener extends EventListener {
     public void onCreated(ChannelFuture channelFuture, WatchEvent.Kind<?> kind, FileEvent event);
-    public void onModified(WatchEvent.Kind<?> kind, FileEvent event);
-    public void onDeleted(WatchEvent.Kind<?> kind, FileEvent event);
+    public void onModified(ChannelFuture channelFuture, WatchEvent.Kind<?> kind, FileEvent event);
+    public void onDeleted(ChannelFuture channelFuture, WatchEvent.Kind<?> kind, FileEvent event);
 }

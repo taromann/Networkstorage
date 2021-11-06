@@ -2,6 +2,7 @@ package com.github.assemblathe1.server.listeners;
 
 import com.github.assemblathe1.common.dto.AddDirectoryRequest;
 import com.github.assemblathe1.common.dto.AddFileRequest;
+import com.github.assemblathe1.common.dto.DeleteRequest;
 import com.github.assemblathe1.common.handler.ServerCommandHandler;
 import com.github.assemblathe1.common.utils.FileService;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,6 +16,11 @@ public class ServerCommandListener implements ServerCommandHandler {
     @Override
     public void onAddFileRequest(AddFileRequest addFileRequest, Path destinationDirectory, ChannelHandlerContext ctx) {
         fileService.onAddFileRequest(addFileRequest, destinationDirectory,  ctx);
+    }
+
+    @Override
+    public void onDeletedFileRequest(DeleteRequest deleteRequest, Path destinationDirectory, ChannelHandlerContext ctx) {
+        fileService.onDeleteFileRequest(deleteRequest, destinationDirectory,  ctx);
     }
 
     @Override
