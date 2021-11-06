@@ -34,7 +34,12 @@ public class FileAdapter implements FileListener {
     }
     @Override
     public void onModified(ChannelFuture channelFuture, WatchEvent.Kind<?> kind, FileEvent event) {
-//        System.out.println(kind + " " + event.getFile());
+        if (event.getFile().toFile().isFile()) {
+            System.out.println(kind + " " + event.getFile());
+            client.sendFile(channelFuture, event.getFile());
+        } else if (event.getFile().toFile().isDirectory()) {
+//            client.sendDirectory(channelFuture, event.getFile());
+        }
     }
 
     @Override
