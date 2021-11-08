@@ -1,52 +1,47 @@
 package com.github.assemblathe1.client.services.filewatcher;
 
+import com.github.assemblathe1.client.Client;
+import com.github.assemblathe1.client.handlers.ClientCommandHandler;
 import com.github.assemblathe1.client.services.filewatcher.listeners.FileListener;
 import com.github.assemblathe1.client.services.filewatcher.utils.FileEvent;
+import com.github.assemblathe1.client.services.filewatcher.utils.FileTreeMaker;
 import io.netty.channel.ChannelFuture;
 import lombok.Data;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
 @Data
-public class FileWatcher extends SimpleFileVisitor<Path> {
+public class FileWatcher {
 
     protected List<FileListener> listeners = new ArrayList<>();
-    public Map<Path, WatchService> runningWatchServices = new HashMap<>();
-    private Set<Path> sourseDirectories = new HashSet<>();
-    private Set<Path> sourceFiles = new HashSet<>();
-    ChannelFuture channelFuture;
+    private Map<Path, WatchService> runningWatchServices = new HashMap<>();
+    private Path watchingDirecory;
+    private ChannelFuture channelFuture;
+    private Client client;
+    private FileListener fileListener;
+    private int maxFrameLength;
 
-    public FileWatcher(Path folder, ChannelFuture channelFuture, FileListener listener) {
+    public FileWatcher(Path watchingDirecory, ChannelFuture channelFuture, FileListener listener, int maxFrameLength) {
         this.channelFuture = channelFuture;
-        createFoldersTree(folder);
-        listeners.add(listener);
+        this.watchingDirecory = watchingDirecory;
+        this.fileListener = listener;
+        this.maxFrameLength = maxFrameLength;
     }
 
-    private void createFoldersTree(Path folder) {
-        try {
-            Files.walkFileTree(folder, this);
-        } catch (
-                IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        sourceFiles.add(file);
-        return FileVisitResult.CONTINUE;
-    }
-
-    @Override
-    public FileVisitResult postVisitDirectory(Path path, IOException exc) throws IOException {
-        addDirectoryToFileWatcher(path);
-        sourseDirectories.add(path);
-        return FileVisitResult.CONTINUE;
+    public void startWatching() {
+        listeners.add(fileListener);
+        ClientCommandHandler clientCommandHandler = new ClientCommandHandler(watchingDirecory, maxFrameLength);
+        FileTreeMaker fileTreeMaker = new FileTreeMaker(watchingDirecory);
+        fileTreeMaker.getSourseDirectories().forEach(path -> clientCommandHandler.sendDirectory(channelFuture, path));
+        fileTreeMaker.getSourceFiles().forEach(path -> clientCommandHandler.sendFile(channelFuture, path));
+        fileTreeMaker.getSourseDirectories().forEach(this::addDirectoryToFileWatcher);
     }
 
     public void addDirectoryToFileWatcher(Path path) {

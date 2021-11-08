@@ -64,13 +64,9 @@ public class Client {
             System.out.println("Client started");
 
             ChannelFuture channelFuture = bootstrap.connect("localhost", 9000).sync();
-            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, channelFuture, new FileAdapter(this));
-
-            fileWatcher.getSourseDirectories().forEach(directory -> sendDirectory(channelFuture, directory));
-            fileWatcher.getSourceFiles().forEach(file -> sendFile(channelFuture, file));
-
+            FileWatcher fileWatcher = new FileWatcher(WATCHING_DIRECTORY, channelFuture, new FileAdapter(WATCHING_DIRECTORY, MAX_FRAME_LENGTH), MAX_FRAME_LENGTH);
+            fileWatcher.startWatching();
             channelFuture.channel().closeFuture().sync();
-
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -78,51 +74,5 @@ public class Client {
             group.shutdownGracefully();
         }
     }
-
-    public void sendDirectory(ChannelFuture channelFuture, Path path) {
-        AddDirectoryRequest putDirectoryRequest = new AddDirectoryRequest();
-        putDirectoryRequest.setWatchingDirectory(WATCHING_DIRECTORY);
-        putDirectoryRequest.setDirectory(path);
-        System.out.println("Try to send directories from client: " + path);
-        try {
-            channelFuture.channel().writeAndFlush(putDirectoryRequest).sync(); //Channel передавать в метод
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void sendFile(ChannelFuture channelFuture, Path path) {
-        int startOffset = 0;
-        try (RandomAccessFile raf = new RandomAccessFile(path.toString(), "r")) {
-            byte[] buffer = new byte[MAX_FRAME_LENGTH - 1024 * 1024];
-            while (startOffset < raf.length()) {
-                AddFileRequest fileToSend = new AddFileRequest();
-                fileToSend.setAbsolutPath(path);
-                fileToSend.setWatchingDirectory(WATCHING_DIRECTORY);
-                raf.seek(startOffset);
-                int bufferLength = raf.read(buffer);
-                fileToSend.setBuffer(buffer);
-                fileToSend.setBufferLength(bufferLength);
-                fileToSend.setStartOffset(startOffset);
-                startOffset += bufferLength;
-                System.out.println("Try to send file from client: " + fileToSend.getAbsolutPath() + " " + fileToSend.getBufferLength());
-                channelFuture.channel().writeAndFlush(fileToSend).sync(); //Channel передавать в метод
-            }
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteFile(ChannelFuture channelFuture, Path path) {
-        DeleteRequest deleteRequest = new DeleteRequest();
-        deleteRequest.setAbsolutPath(path);
-        deleteRequest.setWatchingDirectory(WATCHING_DIRECTORY);
-        try {
-            channelFuture.channel().writeAndFlush(deleteRequest).sync(); //Channel передавать в метод
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
 
