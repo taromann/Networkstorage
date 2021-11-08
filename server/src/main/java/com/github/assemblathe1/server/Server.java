@@ -2,7 +2,7 @@ package com.github.assemblathe1.server;
 
 import com.github.assemblathe1.common.pipeline.JsonDecoder;
 import com.github.assemblathe1.common.pipeline.JsonEncoder;
-import com.github.assemblathe1.server.handlers.FirstServerHandler;
+import com.github.assemblathe1.server.listeners.ServerCommandListener;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -48,7 +48,7 @@ public class Server {
                                     new ByteArrayDecoder(),
                                     new JsonDecoder(),
                                     new JsonEncoder(),
-                                    new FirstServerHandler(destinationDirectory));
+                                    new ServerCommandListener(destinationDirectory));
                         }
                     })
                     .option(ChannelOption.SO_BACKLOG, 128)

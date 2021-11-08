@@ -1,4 +1,4 @@
-package com.github.assemblathe1.server.handlers;
+package com.github.assemblathe1.server.listeners;
 
 import com.github.assemblathe1.common.dto.AddDirectoryRequest;
 import com.github.assemblathe1.common.dto.AddFileRequest;
@@ -11,12 +11,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.nio.file.Path;
 
-public class FirstServerHandler extends SimpleChannelInboundHandler<FileDTO> implements ServerCommandHandler {
+public class ServerCommandListener extends SimpleChannelInboundHandler<FileDTO> implements ServerCommandHandler {
 
     private final Path destinationDirectory;
     FileService fileService = new FileService();
 
-    public FirstServerHandler(Path destinationDirectory) {
+    public ServerCommandListener(Path destinationDirectory) {
         this.destinationDirectory = destinationDirectory;
     }
 

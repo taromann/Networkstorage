@@ -1,9 +1,9 @@
-package com.github.assemblathe1.server.handlers;
+package com.github.assemblathe1.server.listeners;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-public class SecondServerHandler extends SimpleChannelInboundHandler {
+public class SecondServerCommandListener extends SimpleChannelInboundHandler {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
